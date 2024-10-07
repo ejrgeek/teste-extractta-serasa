@@ -60,6 +60,9 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+# Docker
+data/
+
 # dotenv
 .env
 

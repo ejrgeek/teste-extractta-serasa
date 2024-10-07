@@ -1,0 +1,22 @@
+services:
+  brain_agriculture:
+    container_name: brain_agriculture
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./project:/project
+      - ./data/web/static:/data/web/static/
+      - ./data/web/media:/data/web/media/
+    env_file:
+      - ./dotenv_files/.env
+    depends_on:
+      - psql
+  psql:
+    container_name: psql
+    image: postgres:16.4-bullseye
+    volumes:
+      - ./data/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - ./dotenv_files/.env
