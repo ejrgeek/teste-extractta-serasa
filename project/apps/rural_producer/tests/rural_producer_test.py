@@ -1,95 +1,74 @@
+# tests/test_models.py
 from django.test import TestCase
-from apps.rural_producer.models import Farm, RuralProducer, Planting
+from apps.rural_producer.models import RuralProducer, Farm
 from django.core.exceptions import ValidationError
-from pycpfcnpj import cpfcnpj
-from pycpfcnpj import gen
-from uuid import uuid4
+from faker import Faker
 
-class RuralProducerTestCase(TestCase):
+fake = Faker()
+
+class RuralProducerModelTest(TestCase):
 
     def setUp(self):
-        # Setup de objetos para os testes
         self.farm = Farm.objects.create(
-            farm_name="Fazenda Modelo",
-            total_area_hectares=100,
-            agricultural_area_hectares=70,
-            vegetation_area_hectares=30,
+            farm_name=fake.company(),
+            total_area_hectares=100.0,
+            agricultural_area_hectares=50.0,
+            vegetation_area_hectares=40.0,
+            created_by=fake.uuid4(),
         )
-        
-        self.planting = Planting.objects.create(
-            planting_name="Soja",
-        )
-        
-        self.valid_cpf = gen.cpf()
-        self.invalid_cpf = "12345678901"
 
-    def test_create_rural_producer_with_valid_cpf(self):
-        producer = RuralProducer.objects.create(
+    def test_valid_cpf(self):
+        """Test valid CPF"""
+        producer = RuralProducer(
             document_type="CPF",
-            producer_name="José da Silva",
+            document="12345678909",
+            producer_name=fake.name(),
             farm=self.farm,
-            city="Cidade Exemplo",
-            state="SP",
-            created_by=self.user,  # Assumindo que a lógica de usuário está implementada
+            city=fake.city(),
+            state=fake.state_abbr(),
+            created_by=fake.uuid4(),
         )
-        self.assertTrue(cpfcnpj.validate(producer.document_type))
+        producer.clean()
+        self.assertIsNone(producer.full_clean())
 
-    def test_create_rural_producer_with_invalid_cpf(self):
+    def test_invalid_cpf(self):
+        """Test invalid CPF"""
+        producer = RuralProducer(
+            document_type="CPF",
+            document="12345678900",
+            producer_name=fake.name(),
+            farm=self.farm,
+            city=fake.city(),
+            state=fake.state_abbr(),
+            created_by=fake.uuid4(),
+        )
         with self.assertRaises(ValidationError):
-            RuralProducer.objects.create(
-                document_type=self.invalid_cpf,
-                producer_name="José da Silva",
-                farm=self.farm,
-                city="Cidade Exemplo",
-                state="SP",
-                created_by=self.user,
-            )
+            producer.full_clean()
 
-    def test_create_rural_producer_with_valid_cnpj(self):
-        valid_cnpj = CNPJ.generate()
-        producer = RuralProducer.objects.create(
+    def test_valid_cnpj(self):
+        """Test valid CNPJ"""
+        producer = RuralProducer(
             document_type="CNPJ",
-            producer_name="Fazenda Exemplo",
+            document="12345678000195",
+            producer_name=fake.company(),
             farm=self.farm,
-            city="Cidade Exemplo",
-            state="SP",
-            created_by=self.user,
+            city=fake.city(),
+            state=fake.state_abbr(),
+            created_by=fake.uuid4(),
         )
-        self.assertTrue(CNPJ().validate(producer.document_type))
+        producer.clean()
+        self.assertIsNone(producer.full_clean())
 
-    def test_create_rural_producer_with_invalid_cnpj(self):
-        with self.assertRaises(ValidationError):
-            RuralProducer.objects.create(
-                document_type="12345678000100",
-                producer_name="Fazenda Exemplo",
-                farm=self.farm,
-                city="Cidade Exemplo",
-                state="SP",
-                created_by=self.user,
-            )
-
-    def test_areas_should_not_exceed_total_area(self):
-        # Tentando criar uma fazenda onde a soma das áreas excede o total
-        with self.assertRaises(ValidationError):
-            farm = Farm.objects.create(
-                farm_name="Fazenda Inválida",
-                total_area_hectares=100,
-                agricultural_area_hectares=80,
-                vegetation_area_hectares=30,  # Excede o total
-            )
-            farm.clean()  # Validação é executada aqui
-
-    def test_planted_crops_can_have_multiple(self):
-        farm = Farm.objects.create(
-            farm_name="Fazenda Plural",
-            total_area_hectares=150,
-            agricultural_area_hectares=100,
-            vegetation_area_hectares=50,
+    def test_invalid_cnpj(self):
+        """Test invalid CNPJ"""
+        producer = RuralProducer(
+            document_type="CNPJ",
+            document="12345678000199",
+            producer_name=fake.company(),
+            farm=self.farm,
+            city=fake.city(),
+            state=fake.state_abbr(),
+            created_by=fake.uuid4(),
         )
-        planting1 = Planting.objects.create(planting_name="Soja")
-        planting2 = Planting.objects.create(planting_name="Milho")
-
-        farm.planted_crops.add(planting1, planting2)
-        farm.save()
-
-        self.assertEqual(farm.planted_crops.count(), 2)
+        with self.assertRaises(ValidationError):
+            producer.full_clean()

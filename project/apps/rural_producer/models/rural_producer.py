@@ -24,7 +24,7 @@ class RuralProducer(models.Model):
         verbose_name="Tipo do Documento",
     )
 
-    document = models.CharField(max_length=14, unique=True,)
+    document = models.CharField(max_length=20, unique=True,)
 
     producer_name = models.CharField(
         max_length=255,
