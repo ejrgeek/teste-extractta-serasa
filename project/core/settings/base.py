@@ -71,6 +71,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     # my apps
+    "apps.authentication",
+    "apps.rural_producer",
 ]
 
 
@@ -103,12 +105,11 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    #"corsheaders.middleware.CorsPostCsrfMiddleware",
+    # "corsheaders.middleware.CorsPostCsrfMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 
 ROOT_URLCONF = "core.urls"
@@ -147,6 +148,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "authentication.User"
 
 
 LANGUAGE_CODE = "pt-br"

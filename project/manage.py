@@ -5,6 +5,7 @@ import sys
 
 from core.settings.utils import get_settings_module
 
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", get_settings_module())
