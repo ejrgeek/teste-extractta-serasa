@@ -21,9 +21,10 @@ class RuralProducer(models.Model):
     document_type = models.CharField(
         max_length=4,
         choices=CPF_CNPJ_CHOICES,
-        unique=True,
         verbose_name="Tipo do Documento",
     )
+
+    document = models.CharField(max_length=14, unique=True,)
 
     producer_name = models.CharField(
         max_length=255,
@@ -39,7 +40,6 @@ class RuralProducer(models.Model):
 
     state = models.CharField(
         max_length=100,
-        help_text="Ex: PB, SP",
         verbose_name="Estado",
     )
 
