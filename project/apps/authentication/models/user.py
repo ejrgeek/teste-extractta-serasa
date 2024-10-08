@@ -26,3 +26,7 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return f"<User: name={self.first_name} {self.last_login}, enrollment={self.enrollment}>"
+
+
+class Login(models.Model):
+    password = models.CharField(max_length=255)
