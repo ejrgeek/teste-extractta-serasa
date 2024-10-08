@@ -16,7 +16,6 @@ from apps.authentication.api.serializers import RegisterSerializer, UserSerializ
 class RegisterUserViewSet(generics.GenericAPIView):
     serializer_class = RegisterSerializer
     http_method_names = ["post"]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:
