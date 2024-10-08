@@ -1,12 +1,17 @@
 import os
-from django.conf import settings
-from django.conf.urls.static import static
 
+from django.conf import settings
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include, re_path
+
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+
+from rest_framework.routers import DefaultRouter
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from apps.rural_producer.api import viewsets
 
 
 # OPENAPI SETTINGS
@@ -22,8 +27,21 @@ scheme_view = get_schema_view(
 )
 
 
+rural_routers = DefaultRouter()
+rural_routers.register(r'farms', viewsets.FarmViewSet)
+rural_routers.register(r'ruralproducers', viewsets.RuralProducerViewSet)
+rural_routers.register(r'plantings', viewsets.PlantingViewSet)
+
+
+urlpatterns = [
+    path('', include(rural_routers.urls)),
+]
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/", include("apps.authentication.api.urls")),
+    path('api/', include(rural_routers.urls)),
 ]
 
 

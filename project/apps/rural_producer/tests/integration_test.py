@@ -7,6 +7,7 @@ from faker import Faker
 
 fake = Faker()
 
+
 class RuralProducerIntegrationTest(APITestCase):
 
     def setUp(self):
@@ -30,22 +31,22 @@ class RuralProducerIntegrationTest(APITestCase):
 
     def test_create_rural_producer(self):
         """Test creating a new rural producer"""
-        url = reverse('ruralproducer-list')
-        response = self.client.post(url, self.producer_data, format='json')
+        url = reverse("ruralproducer-list")
+        response = self.client.post(url, self.producer_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_rural_producer(self):
         """Test updating an existing rural producer"""
-        url = reverse('ruralproducer-detail', kwargs={'pk': self.producer.id})
+        url = reverse("ruralproducer-detail", kwargs={"pk": self.producer.id})
         updated_data = self.producer_data.copy()
         updated_data["producer_name"] = "Updated Name"
-        response = self.client.put(url, updated_data, format='json')
+        response = self.client.put(url, updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["producer_name"], "Updated Name")
 
     def test_delete_rural_producer(self):
         """Test deleting a rural producer"""
-        url = reverse('ruralproducer-detail', kwargs={'pk': self.producer.id})
+        url = reverse("ruralproducer-detail", kwargs={"pk": self.producer.id})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(RuralProducer.objects.filter(id=self.producer.id).exists())

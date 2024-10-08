@@ -1,74 +1,94 @@
-# tests/test_models.py
-from django.test import TestCase
-from apps.rural_producer.models import RuralProducer, Farm
-from django.core.exceptions import ValidationError
+from rest_framework.test import APITestCase
+from rest_framework import status
+from django.urls import reverse
 from faker import Faker
+from pycpfcnpj import gen, validate
+from apps.rural_producer.models import Farm, RuralProducer
+from django.contrib.auth.models import User
 
-fake = Faker()
 
-class RuralProducerModelTest(TestCase):
+class RuralProducerTests(APITestCase):
 
     def setUp(self):
+        self.faker = Faker()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.client.force_authenticate(user=self.user)
         self.farm = Farm.objects.create(
-            farm_name=fake.company(),
-            total_area_hectares=100.0,
-            agricultural_area_hectares=50.0,
-            vegetation_area_hectares=40.0,
-            created_by=fake.uuid4(),
+            farm_name=self.faker.company(),
+            total_area_hectares=200,
+            agricultural_area_hectares=150,
+            vegetation_area_hectares=50,
+            created_by=self.user
         )
 
-    def test_valid_cpf(self):
-        """Test valid CPF"""
-        producer = RuralProducer(
+    def test_create_rural_producer_with_cpf(self):
+        payload = {
+            "producer_name": self.faker.name(),
+            "document_type": "CPF",
+            "document": gen.cpf(),
+            "farm": self.farm.id,
+            "city": self.faker.city(),
+            "state": self.faker.state_abbr(),
+            "created_by": self.user.id
+        }
+        response = self.client.post(reverse('ruralproducer-list'), payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_rural_producer_with_invalid_cpf(self):
+        invalid_cpf = "12345678900"
+        payload = {
+            "producer_name": self.faker.name(),
+            "document_type": "CPF",
+            "document": invalid_cpf,
+            "farm": self.farm.id,
+            "city": self.faker.city(),
+            "state": self.faker.state_abbr(),
+            "created_by": self.user.id
+        }
+        response = self.client.post(reverse('ruralproducer-list'), payload)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_rural_producer_with_cnpj(self):
+        payload = {
+            "producer_name": self.faker.name(),
+            "document_type": "CNPJ",
+            "document": gen.cnpj(),
+            "farm": self.farm.id,
+            "city": self.faker.city(),
+            "state": self.faker.state_abbr(),
+            "created_by": self.user.id
+        }
+        response = self.client.post(reverse('ruralproducer-list'), payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_update_rural_producer(self):
+        rural_producer = RuralProducer.objects.create(
+            producer_name=self.faker.name(),
             document_type="CPF",
-            document="12345678909",
-            producer_name=fake.name(),
+            document=gen.cpf(),
             farm=self.farm,
-            city=fake.city(),
-            state=fake.state_abbr(),
-            created_by=fake.uuid4(),
+            city=self.faker.city(),
+            state=self.faker.state_abbr(),
+            created_by=self.user
         )
-        producer.clean()
-        self.assertIsNone(producer.full_clean())
+        payload = {
+            "producer_name": self.faker.name(),
+            "city": "Nova Cidade"
+        }
+        response = self.client.put(reverse('ruralproducer-update-producer', args=[rural_producer.id]), payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['producer_name'], payload['producer_name'])
+        self.assertEqual(response.data['city'], payload['city'])
 
-    def test_invalid_cpf(self):
-        """Test invalid CPF"""
-        producer = RuralProducer(
+    def test_delete_rural_producer(self):
+        rural_producer = RuralProducer.objects.create(
+            producer_name=self.faker.name(),
             document_type="CPF",
-            document="12345678900",
-            producer_name=fake.name(),
+            document=gen.cpf(),
             farm=self.farm,
-            city=fake.city(),
-            state=fake.state_abbr(),
-            created_by=fake.uuid4(),
+            city=self.faker.city(),
+            state=self.faker.state_abbr(),
+            created_by=self.user
         )
-        with self.assertRaises(ValidationError):
-            producer.full_clean()
-
-    def test_valid_cnpj(self):
-        """Test valid CNPJ"""
-        producer = RuralProducer(
-            document_type="CNPJ",
-            document="12345678000195",
-            producer_name=fake.company(),
-            farm=self.farm,
-            city=fake.city(),
-            state=fake.state_abbr(),
-            created_by=fake.uuid4(),
-        )
-        producer.clean()
-        self.assertIsNone(producer.full_clean())
-
-    def test_invalid_cnpj(self):
-        """Test invalid CNPJ"""
-        producer = RuralProducer(
-            document_type="CNPJ",
-            document="12345678000199",
-            producer_name=fake.company(),
-            farm=self.farm,
-            city=fake.city(),
-            state=fake.state_abbr(),
-            created_by=fake.uuid4(),
-        )
-        with self.assertRaises(ValidationError):
-            producer.full_clean()
+        response = self.client.delete(reverse('ruralproducer-delete-producer', args=[rural_producer.id]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

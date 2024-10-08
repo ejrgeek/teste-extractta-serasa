@@ -5,4 +5,4 @@ from apps.rural_producer.models import Planting
 class PlantingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Planting
-        fields = "__all__"
+        fields = ["id", "planting_name", "created_at", "updated_at"]
