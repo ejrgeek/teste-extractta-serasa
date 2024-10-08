@@ -27,7 +27,7 @@ class Farm(models.Model):
     planted_crops = models.ManyToManyField(Planting)
 
     created_by = models.ForeignKey(
-        "User",
+        "authentication.User",
         on_delete=models.PROTECT,
         verbose_name="Criado por",
     )

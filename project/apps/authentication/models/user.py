@@ -25,7 +25,7 @@ class User(AbstractUser):
         verbose_name_plural = "Usuários"
 
     def __str__(self) -> str:
-        return f"<User: name={self.first_name} {self.last_login}, enrollment={self.enrollment}>"
+        return f"<User: name={self.first_name} {self.last_login}>"
 
 
 class Login(models.Model):

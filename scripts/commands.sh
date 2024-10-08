@@ -13,5 +13,6 @@ echo "[*] Banco de Dados Iniciado ($POSTGRES_HOST:$POSTGRES_PORT)"
 python manage.py collectstatic --noinput
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
-python manage.py create_standard_plantations --noinput
+python manage.py create_standard_plantations
+python manage.py test
 python manage.py runserver 0.0.0.0:8000
