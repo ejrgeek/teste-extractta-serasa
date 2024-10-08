@@ -1,8 +1,8 @@
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from apps.rural_producer.models import Planting
-from apps.rural_producer.api.serializers import PlantingSerializer
+from apps.rural_producer.models.planting import Planting
+from apps.rural_producer.api.serializers.planting import PlantingSerializer
 
 
 class PlantingViewSet(

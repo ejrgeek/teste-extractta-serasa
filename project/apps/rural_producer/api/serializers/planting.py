@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.rural_producer.models import Planting
+from apps.rural_producer.models.planting import Planting
 
 
 class PlantingSerializer(serializers.ModelSerializer):

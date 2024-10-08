@@ -2,8 +2,9 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from faker import Faker
-from pycpfcnpj import gen, validate
-from apps.rural_producer.models import Farm, RuralProducer
+from pycpfcnpj import gen
+from apps.rural_producer.models.farm import Farm
+from apps.rural_producer.models.rural_producer import RuralProducer
 from django.contrib.auth.models import User
 
 

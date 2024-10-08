@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from apps.rural_producer.models import Farm
-from apps.rural_producer.api.serializers import PlantingSerializer
+from apps.rural_producer.models.farm import Farm
+from apps.rural_producer.api.serializers.planting import PlantingSerializer
 
 
 class FarmSerializer(serializers.ModelSerializer):

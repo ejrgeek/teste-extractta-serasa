@@ -1,7 +1,7 @@
 from pycpfcnpj import cpfcnpj
 from rest_framework import serializers
-from apps.rural_producer.models import RuralProducer
-from apps.rural_producer.api.serializers import FarmSerializer
+from apps.rural_producer.models.rural_producer import RuralProducer
+from apps.rural_producer.api.serializers.farm import FarmSerializer
 
 
 class RuralProducerSerializer(serializers.ModelSerializer):

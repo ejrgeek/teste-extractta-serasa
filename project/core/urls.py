@@ -11,7 +11,9 @@ from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from apps.rural_producer.api import viewsets
+from apps.rural_producer.api.viewsets.farm import FarmViewSet
+from apps.rural_producer.api.viewsets.planting import PlantingViewSet
+from apps.rural_producer.api.viewsets.rural_producer import RuralProducerViewSet
 
 
 # OPENAPI SETTINGS
@@ -28,9 +30,9 @@ scheme_view = get_schema_view(
 
 
 rural_routers = DefaultRouter()
-rural_routers.register(r"farms", viewsets.FarmViewSet)
-rural_routers.register(r"ruralproducers", viewsets.RuralProducerViewSet)
-rural_routers.register(r"plantings", viewsets.PlantingViewSet)
+rural_routers.register(r"farms", FarmViewSet)
+rural_routers.register(r"ruralproducers", PlantingViewSet)
+rural_routers.register(r"plantings", RuralProducerViewSet)
 
 
 urlpatterns = [

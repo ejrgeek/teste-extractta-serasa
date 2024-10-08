@@ -1,8 +1,6 @@
 from django.db import models
 from uuid import uuid4
 
-from apps.rural_producer.models import Farm
-
 
 class RuralProducer(models.Model):
 
@@ -34,7 +32,7 @@ class RuralProducer(models.Model):
         verbose_name="Nome do Produtor",
     )
 
-    farm = models.ForeignKey(Farm, on_delete=models.CASCADE)
+    farm = models.ForeignKey("Farm", on_delete=models.CASCADE)
 
     city = models.CharField(
         max_length=100,

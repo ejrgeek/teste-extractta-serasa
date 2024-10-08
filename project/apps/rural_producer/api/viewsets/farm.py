@@ -2,8 +2,10 @@ from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Sum, Count
-from apps.rural_producer.models import Farm, Planting, RuralProducer
-from apps.rural_producer.api.serializers import FarmSerializer
+from apps.rural_producer.models.farm import Farm
+from apps.rural_producer.models.rural_producer import RuralProducer
+from apps.rural_producer.models.planting import Planting
+from apps.rural_producer.api.serializers.farm import FarmSerializer
 
 
 class FarmViewSet(
