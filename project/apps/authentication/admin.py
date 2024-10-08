@@ -11,7 +11,6 @@ class UserAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "email",
-        "enrollment",
         "is_staff",
         "is_active",
     ]
@@ -21,7 +20,6 @@ class UserAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "email",
-        "enrollment",
     ]
 
     list_filter = [
