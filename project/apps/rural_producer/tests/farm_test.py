@@ -22,9 +22,9 @@ class FarmTests(APITestCase):
             "agricultural_area_hectares": 70,
             "vegetation_area_hectares": 30,
             "planted_crops": [planting.id],
-            "created_by": self.user.id
+            "created_by": self.user.id,
         }
-        response = self.client.post(reverse('farm-list'), payload)
+        response = self.client.post(reverse("farm-list"), payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_farm_total_count(self):
@@ -35,9 +35,9 @@ class FarmTests(APITestCase):
             vegetation_area_hectares=60,
             created_by=self.user,
         )
-        response = self.client.get(reverse('farm-total-farms'))
+        response = self.client.get(reverse("farm-total-farms"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['total_farms'], 1)
+        self.assertEqual(response.data["total_farms"], 1)
 
     def test_farm_total_area(self):
         Farm.objects.create(
@@ -47,9 +47,9 @@ class FarmTests(APITestCase):
             vegetation_area_hectares=50,
             created_by=self.user,
         )
-        response = self.client.get(reverse('farm-total-area-hectares'))
+        response = self.client.get(reverse("farm-total-area-hectares"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['total_area_hectares'], 200)
+        self.assertEqual(response.data["total_area_hectares"], 200)
 
     def test_pie_chart_by_state(self):
         farm = Farm.objects.create(
@@ -66,8 +66,8 @@ class FarmTests(APITestCase):
             farm=farm,
             city=self.faker.city(),
             state="SP",
-            created_by=self.user
+            created_by=self.user,
         )
-        response = self.client.get(reverse('farm-pie-chart-by-state'))
+        response = self.client.get(reverse("farm-pie-chart-by-state"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertGreaterEqual(len(response.data['data']), 1)
+        self.assertGreaterEqual(len(response.data["data"]), 1)

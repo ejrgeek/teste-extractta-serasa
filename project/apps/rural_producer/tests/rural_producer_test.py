@@ -18,7 +18,7 @@ class RuralProducerTests(APITestCase):
             total_area_hectares=200,
             agricultural_area_hectares=150,
             vegetation_area_hectares=50,
-            created_by=self.user
+            created_by=self.user,
         )
 
     def test_create_rural_producer_with_cpf(self):
@@ -29,9 +29,9 @@ class RuralProducerTests(APITestCase):
             "farm": self.farm.id,
             "city": self.faker.city(),
             "state": self.faker.state_abbr(),
-            "created_by": self.user.id
+            "created_by": self.user.id,
         }
-        response = self.client.post(reverse('ruralproducer-list'), payload)
+        response = self.client.post(reverse("ruralproducer-list"), payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_rural_producer_with_invalid_cpf(self):
@@ -43,9 +43,9 @@ class RuralProducerTests(APITestCase):
             "farm": self.farm.id,
             "city": self.faker.city(),
             "state": self.faker.state_abbr(),
-            "created_by": self.user.id
+            "created_by": self.user.id,
         }
-        response = self.client.post(reverse('ruralproducer-list'), payload)
+        response = self.client.post(reverse("ruralproducer-list"), payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_rural_producer_with_cnpj(self):
@@ -56,9 +56,9 @@ class RuralProducerTests(APITestCase):
             "farm": self.farm.id,
             "city": self.faker.city(),
             "state": self.faker.state_abbr(),
-            "created_by": self.user.id
+            "created_by": self.user.id,
         }
-        response = self.client.post(reverse('ruralproducer-list'), payload)
+        response = self.client.post(reverse("ruralproducer-list"), payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_rural_producer(self):
@@ -69,16 +69,15 @@ class RuralProducerTests(APITestCase):
             farm=self.farm,
             city=self.faker.city(),
             state=self.faker.state_abbr(),
-            created_by=self.user
+            created_by=self.user,
         )
-        payload = {
-            "producer_name": self.faker.name(),
-            "city": "Nova Cidade"
-        }
-        response = self.client.put(reverse('ruralproducer-update-producer', args=[rural_producer.id]), payload)
+        payload = {"producer_name": self.faker.name(), "city": "Nova Cidade"}
+        response = self.client.put(
+            reverse("ruralproducer-update-producer", args=[rural_producer.id]), payload
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['producer_name'], payload['producer_name'])
-        self.assertEqual(response.data['city'], payload['city'])
+        self.assertEqual(response.data["producer_name"], payload["producer_name"])
+        self.assertEqual(response.data["city"], payload["city"])
 
     def test_delete_rural_producer(self):
         rural_producer = RuralProducer.objects.create(
@@ -88,7 +87,9 @@ class RuralProducerTests(APITestCase):
             farm=self.farm,
             city=self.faker.city(),
             state=self.faker.state_abbr(),
-            created_by=self.user
+            created_by=self.user,
         )
-        response = self.client.delete(reverse('ruralproducer-delete-producer', args=[rural_producer.id]))
+        response = self.client.delete(
+            reverse("ruralproducer-delete-producer", args=[rural_producer.id])
+        )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

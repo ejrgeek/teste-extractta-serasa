@@ -20,12 +20,6 @@ class RegisterUserViewSet(generics.GenericAPIView):
 
     def post(self, request):
         try:
-            #! TODO: REMOVE HARD CODE
-            if not request.user.groups.all().filter(name="GESTOR").exists():
-                return Response(
-                    status=status.HTTP_401_UNAUTHORIZED,
-                    data=AuthErrors.NO_PERMISSION,
-                )
 
             email = request.data.get("email")
             username = request.data.get("username")

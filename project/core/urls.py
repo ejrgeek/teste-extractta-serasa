@@ -28,20 +28,20 @@ scheme_view = get_schema_view(
 
 
 rural_routers = DefaultRouter()
-rural_routers.register(r'farms', viewsets.FarmViewSet)
-rural_routers.register(r'ruralproducers', viewsets.RuralProducerViewSet)
-rural_routers.register(r'plantings', viewsets.PlantingViewSet)
+rural_routers.register(r"farms", viewsets.FarmViewSet)
+rural_routers.register(r"ruralproducers", viewsets.RuralProducerViewSet)
+rural_routers.register(r"plantings", viewsets.PlantingViewSet)
 
 
 urlpatterns = [
-    path('', include(rural_routers.urls)),
+    path("", include(rural_routers.urls)),
 ]
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.authentication.api.urls")),
-    path('api/', include(rural_routers.urls)),
+    path("api/", include(rural_routers.urls)),
 ]
 
 

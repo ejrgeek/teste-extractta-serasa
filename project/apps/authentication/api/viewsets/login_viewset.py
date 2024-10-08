@@ -1,19 +1,11 @@
-from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, authenticate, get_user_model
-from django.db.models import Q
-
-
-from knox.models import AuthToken
-from knox.auth import TokenAuthentication
-from knox.views import LoginView as KnoxLoginView
 
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework import generics, status
+from rest_framework import status
 
+from knox.views import LoginView as KnoxLoginView
 from sentry_sdk import capture_exception
-
 
 from apps.authentication.api.errors.auth_exception import (
     AccessBlocked,

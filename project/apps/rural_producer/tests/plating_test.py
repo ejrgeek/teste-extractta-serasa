@@ -14,23 +14,22 @@ class PlantingTests(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_planting(self):
-        payload = {
-            "planting_name": "Soja",
-            "created_by": self.user.id
-        }
-        response = self.client.post(reverse('planting-list'), payload)
+        payload = {"planting_name": "Soja", "created_by": self.user.id}
+        response = self.client.post(reverse("planting-list"), payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_planting(self):
         planting = Planting.objects.create(planting_name="Milho")
-        payload = {
-            "planting_name": "Algodão"
-        }
-        response = self.client.put(reverse('planting-update-planting', args=[planting.id]), payload)
+        payload = {"planting_name": "Algodão"}
+        response = self.client.put(
+            reverse("planting-update-planting", args=[planting.id]), payload
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['planting_name'], payload['planting_name'])
+        self.assertEqual(response.data["planting_name"], payload["planting_name"])
 
     def test_delete_planting(self):
         planting = Planting.objects.create(planting_name="Café")
-        response = self.client.delete(reverse('planting-delete-planting', args=[planting.id]))
+        response = self.client.delete(
+            reverse("planting-delete-planting", args=[planting.id])
+        )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
