@@ -1,125 +1,60 @@
 # Teste - Brain Agriculture
 Backend em Python/Django
 
-### Setup:
-Requisitos -> dev:
-* Python 3.10+
-* SQLite3
+## Tecnologias Utilizadas
 
-Requisitos -> homol:
-* Python 3.10+
-* PostgreSQL 14.5+
+- [Django](https://www.djangoproject.com/) - Framework web em Python.
+- [Docker](https://www.docker.com/) - Plataforma para desenvolvimento e execução de aplicativos em contêineres.
 
-Requisitos -> prod:
-* Python 3.10+
-* DEFINIR
+## Pré-requisitos
 
-( Homol) Recomendação - configurando o PostgreSQL (mude nome do banco, nome do usuário e senha):
+Antes de começar, verifique se você possui as seguintes ferramentas instaladas:
 
-    sudo -i -u postgres psql
-    CREATE DATABASE nome_do_banco;
-    CREATE USER nome_usuario WITH PASSWORD 'sua_senha';
-    ALTER ROLE nome_usuario SET client_encoding TO 'utf8';
-    ALTER ROLE nome_usuario SET default_transaction_isolation TO 'read committed';
-    ALTER ROLE nome_usuario SET timezone TO 'UTC';
-    GRANT ALL PRIVILEGES ON DATABASE nome_do_banco TO nome_usuario;
-    
-Agora você precisa clonar o repositório
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-    git clone https://github.com/ejrgeek/teste-extractta-serasa
+## Configuração do Ambiente
 
-Depois caso queira, pode criar um novo ambiente virtual para rodar a aplicação, você pode ler aqui para saber mais caso não tenha conhecimento sobre: https://pythonacademy.com.br/blog/python-e-virtualenv-como-programar-em-ambientes-virtuais
+1. **Clone o repositório:**
 
-Depois de criado, você entra no ambiente e roda os comandos
-
-    pip install -r requirements-dev.txt
-
-Agora vá no arquivo *core/settings/homol.py* e altere o bloco de acordo com os dados que você criou anteriormente ou altere o arquivo *.env*:
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": config("HOMOL_DATABASE_NAME"),
-            "USER": config("HOMOL_DATABASE_USERNAME"),
-            "PASSWORD": config("HOMOL_DATABASE_PASSWORD"),
-            "HOST": "127.0.0.1",
-            "PORT": "5432",
-        }
-    }
-
-
-É necessário configurar as variáveis de ambiente, siga o exemplo do arquivo *.env-sample* e crie um arquivo *.env* atribuindo os valores informados pelo engenheiro responsável. Exemplo do arquivo:
+```bash
+git clone https://github.com/ejrgeek/teste-extractta-serasa
+cd teste-extractta-serasa
 ```
-SECRET_KEY=
-ENV=dev
-DEBUG=True
+   
+2. **Construa e execute os contêineres**
 
-# ADDRS
-ALLOWED_HOSTS=*,
-INTERNAL_IPS=127.0.0.1,localhost,0.0.0.0
-CORS_ORIGIN_WHITELIST=http://localhost,http://localhost:3000,http://127.0.0.1:3000
-ALLOWED_CORS_ORIGIN_HOSTS=http://localhost,http://localhost:3000,http://127.0.0.1:3000
+O comando abaixo vai construir os contêineres necessários para o projeto e também executar comandos para migração, testes e execução do projeto.
 
-# HOMOL DATABASE
-HOMOL_DATABASE_NAME=
-HOMOL_DATABASE_USERNAME=
-HOMOL_DATABASE_PASSWORD=
-
-# SMTP SETTINGS
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_HOST = 
-EMAIL_PORT = 
-EMAIL_HOST_USER = 
-EMAIL_HOST_PASSWORD = 
-DEFAULT_FROM_EMAIL = 
-
-# REDIS-CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-CELERY_ACCEPT_CONTENT = {'application/json'}
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America/Fortaleza'
-CELERY_RESULT_BACKEND = 'django-db'
-
-# SENTRY KEY
-SENTRY_KEY=
-
-# REDIS
-REDIS=redis://redis:6379/0
-
-# APP VERSION
-VERSION=0.0.1+build-setup
+```bash
+docker-compose up --build
+```
+Caso haja a necessidade de recriar o banco após modificações na aplicação voce precisa para os contêineres com:
+```bash
+docker-compose down
+```
+Depois precisa recriá-los:
+```bash
+docker-compose up --build --force-recreate
 ```
 
+3. **Criação de Superusuário**
+```bash
+docker-compose exec brain_agriculture python manage.py createsuperuser
+```
 
-Pronto, agora rode os comandos para fazer a migração das tabelas do banco de dados baseados nos Models do Django gerado pelo ORM.:
+4. **Rota para acessar aplicação**
 
-    python manage.py makemigrations
-    python manage.py migrate
-    
+Você poderá acessar a documentação das APIs por meio da URL abaixo, mas precisará logar.
+```
+http://127.0.0.1:8000/docs/
+```
 
-Depois você pode rodar o comando para criar um super usuario:
-    
-    python manage.py createsuperuser
+### Contribuição
+Se você quiser contribuir com o projeto, siga estas etapas:
 
-Você também precisa pré-cadastrar alguns dados, rode:
-    
-    python manage.py COMANDO
-
-Depois você pode rodar um:
-
-    python manage.py runserver localhost:8000
-    
-A aplicação está no ar (localmente pelo menos rs). Ainda é necessário algumas configurações.
-
-Link do Postman com os consumos da API:
-
-    LINK
-
-Caso você deseje fazer consumo da Api, pesque no arquivo *core/settings/base.py* a lista **CORS_ORIGIN_WHITELIST** e adicione o endereço:porta na lista para não ter problemas.
-
-
-<h4 style="color: red;"><strong>INDISPONÍVEL NO MOMENTO</strong></h4>
-
-    Para os testes nos models você precisa usar um token válido, foi utilizado o [Faker](https://faker.readthedocs.io/en/master/) para gerar dados fictícios, TestCase do Django. Para rodar os testes, use o comando *python manage.py test*.
+- Fork o projeto.
+- Crie uma branch para sua feature (git checkout -b minha-feature).
+- Faça commit das suas alterações (git commit -m 'Adiciona nova feature').
+- Faça push para a branch (git push origin minha-feature).
+- Abra um Pull Request.
